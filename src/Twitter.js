@@ -4,7 +4,7 @@ const Promise = require('bluebird');
 class Twitter {
 
     constructor(config) {
-        const client = new TwitterLib(config.twitter);
+        const client = new TwitterLib(config);
         this.client = Promise.promisifyAll(client);
     }
 
