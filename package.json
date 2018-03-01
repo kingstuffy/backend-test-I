@@ -1,0 +1,28 @@
+{
+  "name": "backend-test-i",
+  "version": "1.0.0",
+  "description": "### Devcenter Backend Developer Test I",
+  "main": "app.js",
+  "scripts": {
+    "dev": "node -r dotenv/config app.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kingstuffy/backend-test-I.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/kingstuffy/backend-test-I/issues"
+  },
+  "homepage": "https://github.com/kingstuffy/backend-test-I#readme",
+  "dependencies": {
+    "bluebird": "^3.5.1",
+    "lodash": "^4.17.5",
+    "twitter": "^1.7.1"
+  },
+  "devDependencies": {
+    "dotenv": "^5.0.1"
+  }
+}
