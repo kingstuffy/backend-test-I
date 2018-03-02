@@ -11,10 +11,31 @@ function strToHashTags(input = '') {
         .map((input) => input.split(','));
     const flattenedInput = _.flatten(commaSeparatedInput);
     const filledInput = flattenedInput.filter((input) => input !== '');
-    const uniqueInput =  _.uniq(filledInput);
+    const uniqueInput = _.uniq(filledInput);
     return uniqueInput.map((input) => `#${input}`)
 }
 
+/**
+ * Converts twitter tweets to google spreadsheet compatible data
+ * @param tweets {Array<Object>}
+ * @returns {*[]}
+ */
+function tweetsToSpreadsheetFormat(tweets) {
+    const userData = tweets.map((tweet) => [
+        tweet.user.screen_name,
+        tweet.user.name,
+        tweet.user.followers_count,
+    ]);
+    const uniqueUserData = _.uniqBy(userData, (user) => user[0]);
+    const spreadsheetData = [
+        ['Username', 'Name', 'Number Of Followers'],
+        ...uniqueUserData,
+    ];
+
+    return spreadsheetData;
+}
+
 module.exports = {
-    strToHashTags
+    strToHashTags,
+    tweetsToSpreadsheetFormat,
 };
