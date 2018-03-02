@@ -7,31 +7,43 @@ const Twitter = require('./services/Twitter');
 
 const logger = new Logger({ logger: console.log });
 
-inquirer.prompt([
-    {
-        type: 'input',
-        name: 'hashTags',
-        message: 'Please enter your hash tags separated by comma or space. eg: #dogs, rice: ',
-        validate(value) {
-            return value ? true : 'Please enter a valid hash tag';
+bot();
+
+function bot() {
+
+    inquirer.prompt([
+        {
+            type: 'input',
+            name: 'hashTags',
+            message: 'Please enter your hash tags separated by comma or space. eg: #dogs, rice: ',
+            validate(value) {
+                return value ? true : 'Please enter a valid hash tag';
+            },
         },
-    },
-    {
-        type: 'input',
-        name: 'count',
-        message: `Please enter number of tweets; Default is ${config.defaultNumberOfTweets}: `,
-    },
-    {
-        type: 'input',
-        name: 'spreadsheetId',
-        message: 'Please enter your spreadsheet id: ',
-        validate(value) {
-            return value ? true : 'Please enter a valid spreadsheet ID';
+        {
+            type: 'input',
+            name: 'count',
+            message: `Please enter number of tweets; Default is ${config.defaultNumberOfTweets}: `,
         },
-    },
-]).then(answers => {
-    run(answers);
-});
+        {
+            type: 'input',
+            name: 'spreadsheetId',
+            message: 'Please enter your spreadsheet id: ',
+            validate(value) {
+                return value ? true : 'Please enter a valid spreadsheet ID';
+            },
+        },
+    ]).then(answers => {
+        return run(answers);
+    }).then(() => {
+        bot();
+    }).catch((err) => {
+        logger.error(err);
+        bot();
+    });
+
+}
+
 
 async function run({ hashTags, spreadsheetId, count = config.defaultNumberOfTweets }) {
     const client = new Twitter(config.twitter);
@@ -60,4 +72,5 @@ async function run({ hashTags, spreadsheetId, count = config.defaultNumberOfTwee
         data: utils.tweetsToSpreadsheetFormat(tweets)
     });
     logger.success(`############ Saved ${results.updatedRows - 1} users to spreadsheet ${spreadsheetId}`);
+
 }
