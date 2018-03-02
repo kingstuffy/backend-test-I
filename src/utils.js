@@ -12,7 +12,9 @@ function strToHashTags(input = '') {
     const flattenedInput = _.flatten(commaSeparatedInput);
     const filledInput = flattenedInput.filter((input) => input !== '');
     const uniqueInput = _.uniq(filledInput);
-    return uniqueInput.map((input) => `#${input}`)
+    return uniqueInput.map((input) => (
+        input.startsWith('#') ? input : `#${input}`
+    ));
 }
 
 /**

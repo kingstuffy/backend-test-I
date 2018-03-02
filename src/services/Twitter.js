@@ -13,7 +13,7 @@ class Twitter {
      * @param hashTags Array oh hash tags
      * @param count
      */
-    search({ hashTags, count = 50 }) {
+    search({ hashTags, count }) {
         const q = this.formatHashTags(hashTags);
         const params = {
             q,
