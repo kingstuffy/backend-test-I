@@ -30,7 +30,6 @@ inquirer.prompt([
         },
     },
 ]).then(answers => {
-    // 1hxlTpsTOmDBf_BYMmVyJxxFpowf2NfUsPKGl6pIqE2s
     run(answers);
 });
 

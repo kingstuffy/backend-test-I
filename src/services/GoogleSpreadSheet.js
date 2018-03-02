@@ -11,12 +11,26 @@ class GoogleSpreadSheet {
         this.saveToExcel = this.saveToExcel.bind(this);
     }
 
+    /**
+     * Saves the given data to the google spreadsheet
+     * @param spreadsheetId
+     * @param data
+     * @returns {Promise<void>}
+     */
     async save({ spreadsheetId, data }) {
         const authClient = await this.googleAuth.authorize(this.config);
         const saveStatus = await this.saveToExcel({ authClient, spreadsheetId, data });
         return saveStatus;
     }
 
+
+    /**
+     * Saves the given data to the google spreadsheet
+     * @param authClient
+     * @param spreadsheetId
+     * @param data
+     * @returns {Promise<void>}
+     */
     async saveToExcel({ authClient, spreadsheetId, data }) {
 
         await this.clearSheet({ authClient, spreadsheetId });
@@ -42,6 +56,12 @@ class GoogleSpreadSheet {
         });
     }
 
+
+    /**
+     * Clears the excel sheet data between Sheet1!A1:Z1000
+     * @param authClient
+     * @param spreadsheetId
+     */
     clearSheet({ authClient, spreadsheetId }) {
         const request = {
             spreadsheetId,
@@ -53,12 +73,22 @@ class GoogleSpreadSheet {
     }
 
 
+    /**
+     * Gets the range required in the sheet for the given data
+     * @param data {Array<{Array}>}
+     * @returns {string}
+     */
     getRange(data) {
         const firstRow = data[0];
         const endAlphabet = this.getRangeAlphabet(firstRow.length);
         return `Sheet1!A1:${endAlphabet}${data.length}`;
     }
 
+    /**
+     * Gets the equivalent alphabet for an index. Eg: 1 -> A, 4 -> D
+     * @param index
+     * @returns {*}
+     */
     getRangeAlphabet(index) {
         const letters = {};
         let letter_first = 'A';
