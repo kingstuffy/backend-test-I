@@ -3,7 +3,7 @@ const readline = require('readline');
 const google = require('googleapis');
 const googleAuth = require('google-auth-library');
 const Promise = require('bluebird');
-const Logger = require('./services/logger');
+const Logger = require('./Logger');
 const logger = new Logger({ logger: console.log });
 
 const SCOPES = ['https://www.googleapis.com/auth/spreadsheets'];

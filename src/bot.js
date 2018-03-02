@@ -2,7 +2,7 @@ const inquirer = require('inquirer');
 const config = require('./config');
 const utils = require('./utils');
 const GoogleSpreadSheet = require('./services/GoogleSpreadSheet');
-const Logger = require('./services/logger');
+const Logger = require('./services/Logger');
 const Twitter = require('./services/Twitter');
 
 const logger = new Logger({ logger: console.log });

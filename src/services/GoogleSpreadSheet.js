@@ -46,14 +46,7 @@ class GoogleSpreadSheet {
             auth: authClient,
         };
 
-        return new Promise((resolve, reject) => {
-            Promise.promisify(sheets.spreadsheets.values.update)(request, function (err, response) {
-                if (err) {
-                    return reject(err);
-                }
-                return resolve(response);
-            });
-        });
+        return Promise.promisify(sheets.spreadsheets.values.update)(request);
     }
 
 
