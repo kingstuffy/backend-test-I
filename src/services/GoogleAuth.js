@@ -2,6 +2,7 @@ const fs = require('fs');
 const readline = require('readline');
 const google = require('googleapis');
 const googleAuth = require('google-auth-library');
+const Promise = require('bluebird');
 
 
 const SCOPES = ['https://www.googleapis.com/auth/spreadsheets'];
@@ -9,16 +10,10 @@ const TOKEN_DIR = (process.env.HOME || process.env.HOMEPATH ||
     process.env.USERPROFILE) + '/.credentials/';
 const TOKEN_PATH = TOKEN_DIR + 'sheets.googleapis.com-nodejs-quickstart.json';
 
-class GoogleSpreadSheet {
+class GoogleAuth {
 
     constructor(config) {
         this.config = config;
-    }
-
-    init() {
-        this.authorize(() => {
-            console.log('Yhhh');
-        });
     }
 
     /**
@@ -27,20 +22,22 @@ class GoogleSpreadSheet {
      *
      * @param {function} callback The callback to call with the authorized client.
      */
-    authorize(callback) {
+    authorize() {
         const self = this;
         const { clientSecret, clientId, redirectUrl } = this.config;
         const auth = new googleAuth();
         const oauth2Client = new auth.OAuth2(clientId, clientSecret, redirectUrl);
 
-        // Check if we have previously stored a token.
-        fs.readFile(TOKEN_PATH, function (err, token) {
-            if (err) {
-                self.getNewToken(oauth2Client, callback);
-            } else {
-                oauth2Client.credentials = JSON.parse(token);
-                callback(oauth2Client);
-            }
+        return new Promise((resolve, reject) => {
+            // Check if we have previously stored a token.
+            fs.readFile(TOKEN_PATH, (err, token) => {
+                if (err) {
+                    self.getNewToken(oauth2Client, { resolve, reject });
+                } else {
+                    oauth2Client.credentials = JSON.parse(token);
+                    resolve(oauth2Client);
+                }
+            });
         });
     }
 
@@ -52,7 +49,7 @@ class GoogleSpreadSheet {
      * @param {getEventsCallback} callback The callback to call with the authorized
      *     client.
      */
-    getNewToken(oauth2Client, callback) {
+    getNewToken(oauth2Client, { resolve, reject }) {
         const self = this;
         const authUrl = oauth2Client.generateAuthUrl({
             access_type: 'offline',
@@ -67,12 +64,12 @@ class GoogleSpreadSheet {
             rl.close();
             oauth2Client.getToken(code, (err, token) => {
                 if (err) {
-                    console.log('Error while trying to retrieve access token', err);
+                    reject(err);
                     return;
                 }
                 oauth2Client.credentials = token;
                 self.storeToken(token);
-                callback(oauth2Client);
+                resolve(oauth2Client);
             });
         });
     }
@@ -96,4 +93,4 @@ class GoogleSpreadSheet {
 
 }
 
-module.exports = GoogleSpreadSheet;
+module.exports = GoogleAuth;
