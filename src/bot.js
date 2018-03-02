@@ -6,7 +6,7 @@ const Logger = require('./services/Logger');
 const Twitter = require('./services/Twitter');
 
 const logger = new Logger({ logger: console.log });
-
+let data = {};
 bot();
 
 function bot() {
@@ -19,11 +19,17 @@ function bot() {
             validate(value) {
                 return value ? true : 'Please enter a valid hash tag';
             },
+            default() {
+                return data.hashTags;
+            },
         },
         {
             type: 'input',
             name: 'count',
             message: `Please enter number of tweets; Default is ${config.defaultNumberOfTweets}: `,
+            default() {
+                return data.count;
+            },
         },
         {
             type: 'input',
@@ -32,8 +38,12 @@ function bot() {
             validate(value) {
                 return value ? true : 'Please enter a valid spreadsheet ID';
             },
+            default() {
+                return data.spreadsheetId;
+            },
         },
     ]).then(answers => {
+        data = { ...answers };
         return run(answers);
     }).then(() => {
         bot();
