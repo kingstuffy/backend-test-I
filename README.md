@@ -1,5 +1,19 @@
 ## Back-end Developer Test
 
+## Running the app
+* Make sure that [Node.js](https://nodejs.org/) is installed with min version of `8.0`.
+* Install Node.js modules with `npm`
+```shell
+npm install
+```
+* Create a google spreadsheet file and note the ID
+* Duplicate the `.env.sample` file into a `.env` file and updated the required keys
+* Run the bot using `npm`
+```shell
+npm run bot
+```
+* Follow the instructions and enjoy!!!
+
 ### Devcenter Backend Developer Test I
 
 The purpose of this test is not only to quickly gauge an applicant's abilities with writing codes, but also their approach to development.
