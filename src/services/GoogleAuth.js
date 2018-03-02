@@ -3,7 +3,8 @@ const readline = require('readline');
 const google = require('googleapis');
 const googleAuth = require('google-auth-library');
 const Promise = require('bluebird');
-
+const Logger = require('./services/logger');
+const logger = new Logger({ logger: console.log });
 
 const SCOPES = ['https://www.googleapis.com/auth/spreadsheets'];
 const TOKEN_DIR = (process.env.HOME || process.env.HOMEPATH ||
@@ -55,7 +56,7 @@ class GoogleAuth {
             access_type: 'offline',
             scope: SCOPES
         });
-        console.log('Authorize this app by visiting this url: ', authUrl);
+        logger.success('Authorize this app by visiting this url: ', authUrl);
         const rl = readline.createInterface({
             input: process.stdin,
             output: process.stdout
@@ -88,7 +89,7 @@ class GoogleAuth {
             }
         }
         fs.writeFile(TOKEN_PATH, JSON.stringify(token));
-        console.log('Token stored to ' + TOKEN_PATH);
+        logger.progress('Token stored to ' + TOKEN_PATH);
     }
 
 }

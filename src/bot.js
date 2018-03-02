@@ -1,8 +1,11 @@
 const inquirer = require('inquirer');
 const config = require('./config');
-const Twitter = require('./services/Twitter');
-const GoogleSpreadSheet = require('./services/GoogleSpreadSheet');
 const utils = require('./utils');
+const GoogleSpreadSheet = require('./services/GoogleSpreadSheet');
+const Logger = require('./services/logger');
+const Twitter = require('./services/Twitter');
+
+const logger = new Logger({ logger: console.log });
 
 inquirer.prompt([
     {
@@ -36,7 +39,7 @@ async function run({ hashTags, spreadsheetId, count = config.defaultNumberOfTwee
     const twitterHashTags = utils.strToHashTags(hashTags);
     const prettyTwitterHashTag = twitterHashTags.join(', ');
 
-    console.info(`############ Fetching tweets for ${prettyTwitterHashTag}`);
+    logger.progress(`############ Fetching tweets for ${prettyTwitterHashTag}`);
 
     const { statuses: tweets } = await client.search({
         hashTags: twitterHashTags,
@@ -44,18 +47,18 @@ async function run({ hashTags, spreadsheetId, count = config.defaultNumberOfTwee
     });
 
     if (tweets.length === 0) {
-        console.error(`############ Couldn't find any tweets for ${prettyTwitterHashTag}`);
+        logger.error(`############ Couldn't find any tweets for ${prettyTwitterHashTag}`);
         return;
     }
 
-    console.info(`############ Fetched ${tweets.length} tweets for ${prettyTwitterHashTag}`);
+    logger.progress(`############ Fetched ${tweets.length} tweets for ${prettyTwitterHashTag}`);
 
 
-    console.info(`############ Saving user data to spreadsheet ${spreadsheetId}`);
+    logger.progress(`############ Saving user data to spreadsheet ${spreadsheetId}`);
     const googleClient = new GoogleSpreadSheet(config.google);
     const results = await googleClient.save({
         spreadsheetId,
         data: utils.tweetsToSpreadsheetFormat(tweets)
     });
-    console.info(`############ Saved ${results.updatedRows - 1} users to spreadsheet ${spreadsheetId}`);
+    logger.success(`############ Saved ${results.updatedRows - 1} users to spreadsheet ${spreadsheetId}`);
 }
